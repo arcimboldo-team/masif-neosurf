@@ -1,10 +1,14 @@
-import sys, os, bioiain
+import sys, os, bioiain, json
 
 from bioiain.visualisation.pymol import PymolScript
 from bioiain.utilities import relative_path
 import numpy as np
 
 results_folder=os.environ["DB_RESULTS_FOLDER"]
+N_BEST = None
+if "--best" in sys.argv:
+    N_BEST = int(sys.argv[sys.argv.index("--best") + 1])
+
 
 if len(os.listdir(results_folder)) == 1:
     results_folder=os.path.join(results_folder, os.listdir(results_folder)[0])
@@ -44,21 +48,22 @@ for site in os.listdir(target_folder):
         sites.append(site)
 
 sites = sorted(sites)
-print("Sites:", sites)
+print("N Sites:", len(sites))
 
 script_name=f"search_{target_name}"
 script = PymolScript(script_name, pymol_path="/usr/bin/pymol")
-script.raw(f"import numpy as np",  is_fun=False)
+script.raw(f"import numpy as np")
 print(script)
 
 pdb_path = os.path.join(target_folder, target_name+".pdb")
 ply_path = os.path.join(target_folder, target_name+".ply")
 selected_sites_path = os.path.join(target_folder, f"selected_sites.vert")
-script.raw(f"cd {os.path.abspath(os.getcwd())}",  is_fun=False)
-script.raw(f"cd {script.subfolder}",  is_fun=False)
+script.raw(f"cd {os.path.abspath(os.getcwd())}")
+script.raw(f"cd {script.subfolder}")
 
 script.load(pdb_path)
-script.raw(f"loadply {relative_path(ply_path, script.subfolder)}",  is_fun=False)
+script.raw(f"loadply {relative_path(ply_path, script.subfolder)}")
+scores = {}
 for site in sites:
     site_path = os.path.join(target_folder, site)
     n_in_site=0
@@ -67,18 +72,35 @@ for site in sites:
         if not os.path.isdir(match_path):
             continue
         name = f"{site}_{match}"
+
         for file in os.listdir(match_path):
             if file.endswith(".pdb"):
                 path = os.path.join(match_path, file)
             elif file.endswith(".npy"):
                 matrix = f"matrix_{name}"
-                script.raw(f"{matrix} = np.load('{relative_path(os.path.join(match_path, file), script.subfolder)}').flatten()", is_fun=False)
-
+                script.raw(f"{matrix} = np.load('{relative_path(os.path.join(match_path, file), script.subfolder)}').flatten()")
+            elif file.endswith(".score"):
+                with open(os.path.join(match_path, file), "r") as f:
+                    score = {s.split(":")[0].strip():s.split(":")[1].strip() for s in f.read().split(",")}
+                    scores[name] = score
         script.load(path, name)
+        script.disable(name)
         n_in_site += 1
-        #script.raw(f"cmd.transform_object('{name}', {matrix})", is_fun=False)
+        #script.raw(f"cmd.transform_object('{name}', {matrix})")
     if n_in_site > 0:
         script.group(site)
+        script.disable(site)
+#print(scores)
+scores = {k:v for k, v in sorted(scores.items(), key=lambda x: float(x[1]["score"]), reverse = True)}
+
+
+if N_BEST is not None:
+    scores = {k:v for k, v in list(scores.items())[:N_BEST]}
+    print(json.dumps(scores, indent=4))
+    for name, data in scores.items():
+        script.enable(name)
+        script.enable("_".join(name.split("_")[:2]))
+
 script.disable("vert*")
 script.disable("pb*")
 script.disable("hbond*")
@@ -102,17 +124,19 @@ with open(selected_sites_path) as f:
                     b = data[3]
                     #print(b)
                     break
-        script.pseudoatom(f"sites{n}", coord=coord, elem="'ca'", b=b)
+        script.pseudoatom(f"sites{n}", coord=coord, elem="'ca'", b=b, atomname ="'PA'") #Will be patched in 0.3.5
 
 
 
 
 script.group("sites", "sites")
 script.show("sites", "spheres")
+script.orient()
 script.spectrum("sites", minimum=0, maximum=1)
-
-script.execute(extra_options=None, quiet=False)
-
+if "--pymol" in sys.argv:
+    script.execute(extra_options=None, quiet=False)
+else:
+    script.save()
 
 
 
