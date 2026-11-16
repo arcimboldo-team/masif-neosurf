@@ -13,4 +13,4 @@ RUN apt-get update -y --allow-insecure-repositories
 RUN apt-get upgrade -y --allow-unauthenticated
 
 
-CMD  echo "This is the updated pymesh:py3.6 (dedian buster)" && echo "$(cat /etc/apt/sources.list)" && echo "$(ls /etc/apt/sources.list.d)"
+CMD  echo "This is the updated pymesh:py3.6 (debian buster)" && echo "$(cat /etc/apt/sources.list)" && echo "$(ls /etc/apt/sources.list.d)"
