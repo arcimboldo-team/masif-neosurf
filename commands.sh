@@ -49,8 +49,13 @@ stop (){
 }
 
 new (){
+	sudo docker run -it -v $PWD:/home/masif-neosurf -u neosurfer --runtime runc masif-neosurf
+}
+
+new-gpu (){
 	sudo docker run -it -v $PWD:/home/masif-neosurf -u neosurfer --runtime=nvidia --gpus all masif-neosurf
 }
+
 
 clean (){
 	sudo docker rm $(sudo docker ps --filter status=exited -q)

@@ -8,6 +8,8 @@
 .keras
 .prodyrc
 .bash_history
+.viminfo
+.config
 
 # Validation
 pdimer
