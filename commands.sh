@@ -26,12 +26,17 @@ build (){
 
 run (){
 	echo "$(sudo docker ps -a | grep "masif-neosurf")"
-	if [[ -z "$(sudo docker ps -a | grep "masif-neosurf")" ]]; then
-		echo " * Creating new Docker container..."
-		sudo docker run -it -v $PWD:/home/masif-neosurf masif-neosurf
+	if [[ -z "$(sudo docker ps | grep "masif-neosurf")" ]]; then
+		if [[ -z "$(sudo docker ps -a | grep "masif-neosurf")" ]]; then
+			echo " * Creating new Docker container..."
+			new
+		else
+			echo " * Starting up existing container..."
+			sudo docker start -ia $(sudo docker ps -a |grep "masif-neosurf"|head -1|cut -d " " -f1 )
+		fi
 	else
-		echo " * Starting up existing container..."
-		sudo docker start -ia $(sudo docker ps -a |grep "masif-neosurf"|head -1|cut -d " " -f1 )
+		echo " * Connecting to running Docker container..."
+		connect
 	fi
 }
 
@@ -39,10 +44,30 @@ connect (){
 	sudo docker exec -it $(sudo docker ps |grep "masif-neosurf"|head -1|rev|cut -d " " -f1 |rev) bash
 }
 
+stop (){
+	sudo docker stop $(sudo docker ps |grep "masif-neosurf"|head -1|cut -d " " -f1 ) || echo "No running container"
+}
 
+new (){
+	sudo docker run -it -v $PWD:/home/masif-neosurf -u neosurfer masif-neosurf
+}
+
+clean (){
+	sudo docker rm $(sudo docker ps --filter status=exited -q)
+}
+
+check-neosurfer() {
+	if [[ $(whoami) == "neosurfer" ]]; then
+		echo "Neosurfing"
+		return 0
+	else
+		echo "NOT neosurfing"
+		return 1
+	fi
+}
 
 process-list (){
-
+	check-neosurfer || return 1
 	path=$(realpath $1)
 	echo "Processing CODES in : $path"
 
@@ -54,7 +79,7 @@ process-list (){
 }
 
 process-pdb (){
-
+	check-neosurfer || return 1
 	CODE=$1
 	FNAME="$1.pdb"
 	CHAIN="$2"
