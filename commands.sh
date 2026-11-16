@@ -12,7 +12,7 @@ change-db(){
 	fi
 
 	echo -e " * Using $DB_NAME db\033]0;$DB_NAME DB\a"
-	export DB_FOLDER="./$DB_NAME-db"
+	export DB_FOLDER="./DBs/$DB_NAME-db"
 	export DB_PDB_FOLDER="$DB_FOLDER/pdbs"
 	export DB_PROCESSED_FOLDER="$DB_FOLDER/processed"
 	export DB_RESULTS_FOLDER="$DB_FOLDER/search_results"
@@ -47,7 +47,7 @@ process-list (){
 	echo "Processing CODES in : $path"
 
 	declare -a codes=()
-	while read -d "," line; do
+	while read line; do
 		echo $line
 		process-pdb $line
 	done < $path
@@ -94,9 +94,9 @@ process-pdb (){
 		declare -a chains=("$CHAIN")
 	fi
 	for chain in ${chains[@]}; do
-		echo ""
-		if [[ -d $DB_PROCESSED_FOLDER/descriptors/sc05/all_feat/${CODE}_${CHAIN} ]]; then
-			echo " * PDB (${CODE}_${CHAIN}) already processed"
+		echo "$DB_PROCESSED_FOLDER/descriptors/sc05/all_feat/${CODE}_${chain}"
+		if [[ -d $DB_PROCESSED_FOLDER/descriptors/sc05/all_feat/${CODE}_${chain} ]]; then
+			echo " * PDB (${CODE}_${chain}) already processed"
 		else
 			echo " * Processing $FILEPATH ${CODE}_${chain}"
 			python -W ignore ./preprocess_pdb.py $FILEPATH ${CODE}_${chain} -o $DB_PROCESSED_FOLDER
