@@ -75,6 +75,7 @@ process-pdb (){
 			#echo $line
 			if [[ $(echo $line | cut -d " " -f1 ) == "ATOM" ]]; then
 				chain="$(echo $line | cut -d " " -f5)"
+				chain="${chain::1}"
 				#echo "$line $chain"
 				chain_added="0"
 				#echo "${chains[@]}"
