@@ -662,7 +662,7 @@ def align_protein(
                 # Output the rigid transformation
                 np.save(out_fn + '_transform.npy', res.transformation @ random_transformation)
                 
-                print ('Surface alignment is deactivated - aligning only pdbs. ')
+                #print ('Surface alignment is deprecated - aligning only pdbs. ')
                 continue
 
                 # Align and save the ply file for convenience.     
