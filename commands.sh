@@ -71,15 +71,35 @@ check-neosurfer() {
 	fi
 }
 
+
+filter-list (){
+	python ./filter-peptides.py "$@"
+}
+
 process-list (){
 	check-neosurfer || return 1
 	path=$(realpath $1)
-	echo "Processing CODES in : $path"
+	if [[ $path == *".chains.list" ]]; then
+		echo "Processing CHAINS in : $path"
+		is_chains=1
+	else
+		echo "Processing CODES in : $path"
+		is_chains=0
+	fi
 
 	declare -a codes=()
 	while read line; do
 		echo $line
-		process-pdb $line
+		if [[ $is_chains ]]; then
+			chain=$( echo $line | cut -d "_" -f2 )
+			chain="${chain::1}"
+			pdb=$( echo $line | cut -d "_" -f1 )
+			echo "$ process-pdb $pdb $chain"
+			process-pdb $pdb $chain
+		else
+			echo "$ process-pdb $line"
+			process-pdb $line
+		fi
 	done < $path
 }
 
