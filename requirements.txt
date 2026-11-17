@@ -1,1 +1,1 @@
-bioiain >= 0.4.6
+bioiain >= 0.4.7

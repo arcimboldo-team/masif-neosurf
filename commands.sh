@@ -158,6 +158,15 @@ process-pdb (){
 
 
 
+search-representatives (){
+	declare -a representatives=("8E1A" "6W9L" "4PF3", "1SQN", "7NFB")
+	for code in "${arr[@]}"; do
+		search $code A 100
+	done
+
+}
+
+
 search (){
 
 	if [[ $# -lt 3 ]]; then
