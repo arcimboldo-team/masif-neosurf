@@ -48,7 +48,7 @@ target_name = sys.argv[1]
 print(" * Target name:", target_name)
 target_folder=os.path.join(results_folder, target_name)
 print(" * Target folder:", target_folder)
-assert os.path.exists(target_folder)
+assert os.path.exists(target_folder), target_folder
 
 sites = []
 for site in os.listdir(target_folder):

@@ -163,7 +163,7 @@ search-representatives (){
 		echo "Please provide <num_sites>"
 		return 1
 	fi
-	declare -a representatives=("8E1A" "6W9L" "4PF3", "1SQN", "7NFB")
+	declare -a representatives=("8E1A" "6W9L" "4PF3" "1SQN" "7NFB")
 	for code in "${representatives[@]}"; do
 		echo " * Representative: $code"
 		search $code A "$@"
@@ -230,7 +230,7 @@ search (){
 }
 
 show-representatives() {
-	declare -a representatives=("8E1A" "6W9L" "4PF3", "1SQN", "7NFB")
+	declare -a representatives=("8E1A" "6W9L" "4PF3" "1SQN" "7NFB")
 	echo " * Showing representative search results"
 
 	for code in "${representatives[@]}"; do
