@@ -159,12 +159,18 @@ process-pdb (){
 
 
 search-representatives (){
+	if [[ $# -lt 1 ]]; then
+		echo "Please provide <num_sites>"
+		return 1
+	fi
 	declare -a representatives=("8E1A" "6W9L" "4PF3", "1SQN", "7NFB")
-	for code in "${arr[@]}"; do
-		search $code A 100
+	for code in "${representatives[@]}"; do
+		echo " * Representative: $code"
+		search $code A "$@"
 	done
 
 }
+
 
 
 search (){
@@ -181,24 +187,39 @@ search (){
 	echo ""
 	echo " * Searching targets for $1_$2 in $DB_PROCESSED_FOLDER"
 	VERTICE_PATH="$DB_PROCESSED_FOLDER/output/all_feat_3l/pred_surfaces/$1_$2.filtered_$3.vix"
-	if [[ -f "$VERTICE_PATH" ]]; then
 
+	if [[ -f "$VERTICE_PATH" ]]; then
 		echo " * Using filtered vertices from $VERTICE_PATH"
-		python -W ignore masif_search.py \
-		--target_dir $DB_PROCESSED_FOLDER \
-		--target ${CODE}_${CHAIN} \
-		--database $DB_PROCESSED_FOLDER \
-		--out_dir "$DB_RESULTS_FOLDER/$NUM_SITES" \
-		--site_vix_file="$VERTICE_PATH" "${@:3:}"
+		if [[ "$*" == *"--self"* ]]; then
+			echo " * Targetting self only"
+			echo ${CODE}_${CHAIN} > /tmp/${CODE}_${CHAIN}.txt
+			python -W ignore masif_search.py \
+			--target_dir $DB_PROCESSED_FOLDER \
+			--target ${CODE}_${CHAIN} \
+			--database $DB_PROCESSED_FOLDER \
+			--subset /tmp/${CODE}_${CHAIN}.txt \
+			--out_dir "$DB_RESULTS_FOLDER/self_$NUM_SITES" \
+			--site_vix_file="$VERTICE_PATH" "${@:3:}"
+		else
+			echo " * Targetting entire database"
+			python -W ignore masif_search.py \
+			--target_dir $DB_PROCESSED_FOLDER \
+			--target ${CODE}_${CHAIN} \
+			--database $DB_PROCESSED_FOLDER \
+			--out_dir "$DB_RESULTS_FOLDER/$NUM_SITES" \
+			--site_vix_file="$VERTICE_PATH" "${@:3:}"
+		fi
 	else
-		echo " * Filtered file: $VERTICE_PATH not found"
-		echo " * Using highest scoring vertices"
-		python -W ignore masif_search.py \
-		--target_dir $DB_PROCESSED_FOLDER \
-		--target ${CODE}_${CHAIN} \
-		--database $DB_PROCESSED_FOLDER \
-		--out_dir "$DB_RESULTS_FOLDER/$NUM_SITES" \
-		--num_sites  $NUM_SITES "${@:3:}"
+		echo "Vertice path not found: $VERTICE_PATH"
+	# else
+	# 	echo " * Filtered file: $VERTICE_PATH not found"
+	# 	echo " * Using highest scoring vertices"
+	# 	python -W ignore masif_search.py \
+	# 	--target_dir $DB_PROCESSED_FOLDER \
+	# 	--target ${CODE}_${CHAIN} \
+	# 	--database $DB_PROCESSED_FOLDER \
+	# 	--out_dir "$DB_RESULTS_FOLDER/$NUM_SITES" \
+	# 	--num_sites  $NUM_SITES "${@:3:}"
 	fi
 	return 1
 
@@ -208,10 +229,18 @@ search (){
 	echo " * Results saved to $DB_RESULTS_FOLDER"
 }
 
+show-representatives() {
+	declare -a representatives=("8E1A" "6W9L" "4PF3", "1SQN", "7NFB")
+	echo " * Showing representative search results"
 
+	for code in "${representatives[@]}"; do
+		echo " * Representative: $code"
+		python ./search_show.py ${code}_A "$@" --compile --representative
+	done
+
+}
 
 show (){
-
 	echo " * Showing search results"
 	python ./search_show.py "$@"
 }
