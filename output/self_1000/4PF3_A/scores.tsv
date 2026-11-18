@@ -1,0 +1,26 @@
+{
+    "site_250_4PF3_A": {
+        "name": "4PF3_A",
+        "point id": "8",
+        "score": "0.8369",
+        "clashing_ca": "0",
+        "clashing_heavy": "3",
+        "desc_dist_score": "20.663232803387345",
+        "mean_desc_dist_score": "0.16143150627646363",
+        "match_vix": "2663",
+        "desc_dist": "1.9609781503677368",
+        "iface_score": "0.9316511154174805"
+    },
+    "site_132_4PF3_A": {
+        "name": "4PF3_A",
+        "point id": "8",
+        "score": "0.8321",
+        "clashing_ca": "0",
+        "clashing_heavy": "2",
+        "desc_dist_score": "23.661106459359328",
+        "mean_desc_dist_score": "0.16546228293258272",
+        "match_vix": "4351",
+        "desc_dist": "1.9703662395477295",
+        "iface_score": "0.8113831281661987"
+    }
+}
