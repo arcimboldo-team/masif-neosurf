@@ -175,18 +175,19 @@ search-representatives (){
 
 search (){
 
-	if [[ $# -lt 3 ]]; then
-		echo "Please provide <pdb code> <chain> <num_sites>"
+	if [[ $# -lt 4 ]]; then
+		echo "Please provide <pdb code> <chain> <num_sites> <threshold>"
 		return 1
 	fi
 	CODE=$1
 	CHAIN=$2
 	NUM_SITES=$3
+	THRESHOLD=$4
 	echo " * Filtering vertices..."
-	python ./filter_vertices.py $DB_PROCESSED_FOLDER/output/all_feat_3l/pred_surfaces/$1_$2.ply $NUM_SITES
+	python ./filter_vertices.py $DB_PROCESSED_FOLDER/output/all_feat_3l/pred_surfaces/${CODE}_${CHAIN}.ply $NUM_SITES $THRESHOLD
 	echo ""
-	echo " * Searching targets for $1_$2 in $DB_PROCESSED_FOLDER"
-	VERTICE_PATH="$DB_PROCESSED_FOLDER/output/all_feat_3l/pred_surfaces/$1_$2.filtered_$3.vix"
+	echo " * Searching targets for ${CODE}_${CHAIN} in $DB_PROCESSED_FOLDER"
+	VERTICE_PATH="$DB_PROCESSED_FOLDER/output/all_feat_3l/pred_surfaces/${CODE}_${CHAIN}.filtered_${NUM_SITES}_${THRESHOLD}.vix"
 
 	if [[ -f "$VERTICE_PATH" ]]; then
 		echo " * Using filtered vertices from $VERTICE_PATH"
@@ -198,7 +199,7 @@ search (){
 			--target ${CODE}_${CHAIN} \
 			--database $DB_PROCESSED_FOLDER \
 			--subset /tmp/${CODE}_${CHAIN}.txt \
-			--out_dir "$DB_RESULTS_FOLDER/self_$NUM_SITES" \
+			--out_dir "$DB_RESULTS_FOLDER/self_${NUM_SITES}_${THRESHOLD}" \
 			--site_vix_file="$VERTICE_PATH" "${@:3:}"
 		else
 			echo " * Targetting entire database"
@@ -206,7 +207,7 @@ search (){
 			--target_dir $DB_PROCESSED_FOLDER \
 			--target ${CODE}_${CHAIN} \
 			--database $DB_PROCESSED_FOLDER \
-			--out_dir "$DB_RESULTS_FOLDER/$NUM_SITES" \
+			--out_dir "$DB_RESULTS_FOLDER/${NUM_SITES}_${THRESHOLD}" \
 			--site_vix_file="$VERTICE_PATH" "${@:3:}"
 		fi
 	else

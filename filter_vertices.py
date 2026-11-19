@@ -16,8 +16,10 @@ def d2(p0:list, p1:list, root=False) -> float:
 
 ply_path = sys.argv[1]
 num_sites = int(sys.argv[2])
-print(f" * Filtering {num_sites} sites in :", ply_path)
 
+threshold = float(sys.argv[3])
+
+print(f" * Filtering {num_sites} sites in : {ply_path} (threshold={threshold})")
 
 target_vertices = []
 sorted_vertices = []
@@ -34,6 +36,9 @@ sorted_vertices = sorted(sorted_vertices, key=lambda x: x[4], reverse=True)
 n = 0
 while (len(target_vertices) <= min(num_sites, len(sorted_vertices))) and (n < len(sorted_vertices)):
     vert = sorted_vertices[n]
+    if vert[4] < threshold:
+        n+=1
+        continue
     p1 = vert[1:4]
     #print(p1)
     is_too_close=False
@@ -48,8 +53,8 @@ while (len(target_vertices) <= min(num_sites, len(sorted_vertices))) and (n < le
         target_vertices.append(vert)
 
     n+=1
-
-vix_path = ply_path.replace(".ply", f".filtered_{num_sites}.vix")
+print(f"Found {len(target_vertices)} vertices")
+vix_path = ply_path.replace(".ply", f".filtered_{num_sites}_{threshold}.vix")
 with open(vix_path, "w") as vix:
     for vert in target_vertices:
         vix.write(f"{vert[0]}\n")
