@@ -1,0 +1,26 @@
+{
+    "site_39_8E1A_A": {
+        "name": "8E1A_A",
+        "point id": "6",
+        "score": "0.9913",
+        "clashing_ca": "0",
+        "clashing_heavy": "0",
+        "desc_dist_score": "20.813433344003997",
+        "mean_desc_dist_score": "0.14761300243974465",
+        "match_vix": "4617",
+        "desc_dist": "1.949601650238037",
+        "iface_score": "0.9324241280555725"
+    },
+    "site_20_8E1A_A": {
+        "name": "8E1A_A",
+        "point id": "7",
+        "score": "0.8759",
+        "clashing_ca": "0",
+        "clashing_heavy": "5",
+        "desc_dist_score": "16.22041882507591",
+        "mean_desc_dist_score": "0.12771983326831426",
+        "match_vix": "3144",
+        "desc_dist": "1.996889352798462",
+        "iface_score": "0.7967163324356079"
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "site_102_6W9L_A": {
+        "name": "6W9L_A",
+        "point id": "5",
+        "score": "0.9634",
+        "clashing_ca": "0",
+        "clashing_heavy": "2",
+        "desc_dist_score": "24.455978535247354",
+        "mean_desc_dist_score": "0.18387953785900266",
+        "match_vix": "543",
+        "desc_dist": "1.5216026306152344",
+        "iface_score": "0.959552526473999"
+    },
+    "site_76_6W9L_A": {
+        "name": "6W9L_A",
+        "point id": "1",
+        "score": "0.9471",
+        "clashing_ca": "0",
+        "clashing_heavy": "0",
+        "desc_dist_score": "19.42806287036632",
+        "mean_desc_dist_score": "0.17192975991474618",
+        "match_vix": "202",
+        "desc_dist": "1.89561128616333",
+        "iface_score": "0.8427829146385193"
+    },
+    "site_20_6W9L_A": {
+        "name": "6W9L_A",
+        "point id": "8",
+        "score": "0.8895",
+        "clashing_ca": "0",
+        "clashing_heavy": "5",
+        "desc_dist_score": "18.464826810237692",
+        "mean_desc_dist_score": "0.13779721500177383",
+        "match_vix": "1857",
+        "desc_dist": "1.9044885635375977",
+        "iface_score": "0.7979098558425903"
+    },
+    "site_47_6W9L_A": {
+        "name": "6W9L_A",
+        "point id": "2",
+        "score": "0.8446",
+        "clashing_ca": "0",
+        "clashing_heavy": "0",
+        "desc_dist_score": "21.530466406673163",
+        "mean_desc_dist_score": "0.16188320606521175",
+        "match_vix": "441",
+        "desc_dist": "1.9505233764648438",
+        "iface_score": "0.910003125667572"
+    },
+    "site_74_6W9L_A": {
+        "name": "6W9L_A",
+        "point id": "23",
+        "score": "0.8110",
+        "clashing_ca": "0",
+        "clashing_heavy": "2",
+        "desc_dist_score": "23.937544206188313",
+        "mean_desc_dist_score": "0.18134503186506298",
+        "match_vix": "1675",
+        "desc_dist": "1.9047539234161377",
+        "iface_score": "0.9378023147583008"
+    }
+}
